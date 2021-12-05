@@ -1,0 +1,67 @@
+---
+title: "R wk3-pca"
+output: html_document
+---
+## PROBLEM DEFINITION
+
+You are a Data analyst at Carrefour Kenya and are currently undertaking a project that will inform the marketing department on the most relevant marketing strategies that will result in the highest no. of sales (total price including tax). Your project has been divided into four parts where you'll explore a recent marketing dataset by performing various unsupervised learning techniques and later providing recommendations based on your insights.
+
+Part 1: Dimensionality Reduction
+
+This section of the project entails reducing your dataset to a low dimensional dataset using the t-SNE algorithm or PCA. You will be required to perform your analysis and provide insights gained from your analysis.
+
+
+## CHECKING THE DATA
+
+```{r}
+library("data.table")
+
+data1 <- read.csv("C:\\Users\\ADMIN\\Downloads\\Supermarket_Dataset_1 - Sales Data.csv")
+
+# First check have a look at the data set.
+
+head(data1)
+```
+
+# Selecting the numerical data
+
+```{r}
+df <- data1[, c(6,7,8,12,14,15,16 )]
+head(df)
+```
+# We then pass df to the prcomp(). We also set two arguments, center and scale, 
+# to be TRUE then preview our object with summary
+
+```{r}
+my_pca <- prcomp(data1[, c(6,8,12,14,15,16)], center = TRUE, scale. = TRUE)
+summary(my_pca)
+```
+# As a result we obtain 6 principal components, 
+# each which explain a percentate of the total variation of the dataset
+# PC1 explains 74% of the total variance, which means that nearly two-thirds 
+# of the information in the dataset (6 variables) can be encapsulated 
+# by just that one Principal Component. PC2 explains 17% of the variance
+
+```{r}
+str(my_pca)
+```
+# We will now plot our pca. This will provide us with some very useful insights i.e. 
+# which cars are most similar to each other 
+# ---
+# 
+
+# Installing our ggbiplot visualisation package
+
+```{r}
+install.packages("devtools")
+library(devtools)
+install_github("vqv/ggbiplot")
+
+```
+# Then Loading our ggbiplot library
+
+```{r}
+library(ggbiplot)
+ggbiplot(my_pca)
+```
+
