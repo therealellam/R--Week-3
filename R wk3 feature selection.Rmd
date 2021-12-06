@@ -1,0 +1,99 @@
+---
+title: "R wk3- part2"
+output: html_document
+---
+
+## PROBLEM DEFINITION
+
+You are a Data analyst at Carrefour Kenya and are currently undertaking a project that will inform the marketing department on the most relevant marketing strategies that will result in the highest no. of sales (total price including tax). Your project has been divided into four parts where you'll explore a recent marketing dataset by performing various unsupervised learning techniques and later providing recommendations based on your insights.
+
+
+Part 2: Feature Selection
+
+This section requires you to perform feature selection through the use of the unsupervised learning methods learned earlier this week. You will be required to perform your analysis and provide insights on the features that contribute the most information to the dataset.
+
+## CHECKING THE DATA
+
+```{r}
+library("data.table")
+
+data2 <- read.csv("C:\\Users\\ADMIN\\Downloads\\Supermarket_Dataset_1 - Sales Data.csv")
+
+# First check have a look at the data set.
+
+head(data2)
+
+```
+
+```{r}
+data2<- data2[, -c(1,2,3,4,5,9,10,11,13)]
+data2 
+```
+
+
+1. Filter Methods
+
+```{r}
+# Installing and loading our caret package
+suppressWarnings(
+        suppressMessages(if
+                         (!require(caret, quietly=TRUE))
+                install.packages("caret")))
+library(caret)
+```
+
+
+```{r}
+# Installing and loading the corrplot package for plotting
+# 
+suppressWarnings(
+        suppressMessages(if
+                         (!require(corrplot, quietly=TRUE))
+                install.packages("corrplot")))
+library(corrplot)
+```
+
+
+```{r}
+# Calculating the correlation matrix
+# ---
+#
+correlationMatrix <- cor(data2)
+```
+
+
+
+```{r}
+# Find attributes that are highly correlated
+
+#
+highlyCorrelated <- findCorrelation(correlationMatrix, cutoff=0.75)
+```
+
+
+```{r}
+# Highly correlated attributes
+
+highlyCorrelated
+
+names(data2[,highlyCorrelated])
+```
+
+
+```{r}
+# Removing Redundant Features 
+# ---
+# 
+data2.1<-data2[-highlyCorrelated]
+```
+
+
+```{r}
+# Performing our graphical comparison
+# ---
+# 
+par(mfrow = c(1, 2))
+corrplot(correlationMatrix, order = "hclust")
+corrplot(cor(data2.1), order = "hclust")
+```
+
