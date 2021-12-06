@@ -1,0 +1,91 @@
+---
+title: "R wk3-part3"
+output: html_document
+---
+
+## Install the required arules library
+
+```{r}
+install.packages("arules")
+```
+
+### Loading the arules library
+
+```{r}
+library(arules)
+```
+
+## Loading Data
+
+```{r}
+
+path <-"http://bit.ly/SupermarketDatasetII"
+
+data3<-read.transactions(path, sep = ",")
+data3
+```
+# Verifying the object's class
+
+```{r}
+class(data3)
+```
+#Inspecting the data
+
+```{r}
+inspect(data3[1:6])
+```
+##Previewing items in the dataset
+
+```{r}
+items<-as.data.frame(itemLabels(data3))
+colnames(items) <- "Item"
+head(items, 10) 
+```
+
+##Summary of the dataset
+
+```{r}
+summary(data3)
+```
+## Chart of frequencies
+
+```{r}
+par(mfrow = c(1, 2))
+
+# plot the frequency of items
+itemFrequencyPlot(data3, topN = 7,col="darkgreen")
+itemFrequencyPlot(data3, support = 0.1,col="darkred")
+```
+# Building a model based on association rules 
+# using the apriori function 
+# ---
+# We use Min Support as 0.001 and confidence as 0.85
+
+```{r}
+rules <- apriori (data3, parameter = list(supp = 0.001, conf = 0.85))
+rules
+```
+# We established 29 rules
+
+## We then perform exploration of the model
+
+```{r}
+# If we're interested in making a promotion relating to the sale of Almonds, 
+# we could create a subset of rules concerning these products 
+# ---
+# This would tell us the items that the customers bought before purchasing yogurt
+# ---
+# 
+almond <- subset(rules, subset = rhs %pin% "almond")
+ 
+# Then order by confidence
+almond<-sort(almond, by="confidence", decreasing=TRUE)
+
+```
+
+
+```{r}
+inspect(almond)
+```
+
+
