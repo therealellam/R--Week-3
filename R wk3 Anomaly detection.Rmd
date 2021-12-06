@@ -1,0 +1,58 @@
+---
+title: "R wk3 part4"
+output: html_document
+---
+
+## Install packages
+
+```{r}
+# 
+
+#Install the devtools package then github packages
+install.packages("devtools")
+install.packages("Rcpp")
+library(devtools)
+install_github("petermeissner/wikipediatrend")
+install_github("twitter/AnomalyDetection")
+install.packages("anomalize")
+#Loading the libraries
+library(Rcpp)
+library(wikipediatrend)
+library(AnomalyDetection)
+
+```
+
+## Loading the Data
+
+```{r}
+path <-"http://bit.ly/CarreFourSalesDataset"
+
+data4 <-read.csv(path, sep = ",")
+data4
+```
+
+
+
+```{r}
+# Load tidyverse and anomalize
+
+library(tidyverse)
+library(anomalize)
+```
+
+## Plotting the Data
+
+```{r}
+#Plotting data
+library(ggplot2)
+ggplot(data4, aes(x=Date, y=Sales, color=Sales)) + geom_line()
+
+```
+
+
+```{r}
+#Apply anomaly detection and plot the results
+anomalies = AnomalyDetectionVec(data4, period = NULL, direction="pos", plot=TRUE)
+anomalies$plot
+```
+
